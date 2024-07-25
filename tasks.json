@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "description": "Complete the JavaScript tutorial",
+        "completed": true,
+        "priority": "High",
+        "dueDate": "2024-07-31"
+    },
+    {
+        "id": 2,
+        "description": "Read the new web development book",
+        "completed": false,
+        "priority": "Medium",
+        "dueDate": "2024-08-05"
+    },
+    {
+        "id": 3,
+        "description": "Update the portfolio website",
+        "completed": true,
+        "priority": "Low",
+        "dueDate": "2024-08-10"
+    },
+    {
+        "id": 4,
+        "description": "Organize the project files",
+        "completed": false,
+        "priority": "Medium",
+        "dueDate": "2024-08-01"
+    },
+    {
+        "id": 5,
+        "description": "Prepare a presentation for the meeting",
+        "completed": true,
+        "priority": "High",
+        "dueDate": "2024-08-15"
+    },
+    {
+        "id": 6,
+        "description": "Clean the workspace",
+        "completed": false,
+        "priority": "Low",
+        "dueDate": "2024-08-20"
+    },
+    {
+        "id": 7,
+        "description": "Schedule a team lunch",
+        "completed": true,
+        "priority": "Medium",
+        "dueDate": "2024-08-07"
+    },
+    {
+        "id": 8,
+        "description": "Implement new feature in the app",
+        "completed": false,
+        "priority": "High",
+        "dueDate": "2024-08-25"
+    },
+    {
+        "id": 9,
+        "description": "Submit the project report",
+        "completed": true,
+        "priority": "High",
+        "dueDate": "2024-08-30"
+    },
+    {
+        "id": 10,
+        "description": "Review the codebase for improvements",
+        "completed": false,
+        "priority": "Medium",
+        "dueDate": "2024-09-05"
+    }
+]

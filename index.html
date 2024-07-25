@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management Application</title>
+    <link rel="shortcut icon" href="./Images/icons8-task-cute-outline-96.png" type="image/x-png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/264f68e7e6.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <p>Task Management Application</p>
+    </header>
+    <main>
+        <form action="" id="form-content">
+            <input type="text" name="" id="task-title" placeholder="Enter your new task here" title="New Task">
+            <button type="submit" id="add-task-btn" title="Add Task">Add Task <i class="fa-solid fa-plus"></i></button>
+        </form>
+        <div class="display-task">
+            <ul id="list-items">
+            </ul>
+            <div class="buttons">
+                <button id="completed-btn" class="btn">Completed <i class="fa-solid fa-check"
+                        title="Completed Tasks"></i></button>
+                <button id="incomplete-btn" class="btn" title="Incomplete Tasks">Incomplete <i
+                        class="fa-solid fa-xmark"></i></button>
+                <button id="all-tasks" class="btn" title="All Tasks">All Tasks <i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+    </main>
+    <footer id="copyright"><a href="https://github.com/vishwanathkhuli">vishwanathkhuli</a></footer>
+
+    <!-- <script src="scriptNoLocalStorage.js"></script> -->
+    <script src="scriptLocalStorage.js"></script>
+</body>
+
+</html>
