@@ -112,6 +112,9 @@ footer {
 }
 
 @media screen and (max-width: 1042px) {
+    body {
+        background-color: black;
+    }
 
     #form-content {
         width: 57%;
@@ -123,6 +126,9 @@ footer {
 }
 
 @media screen and (max-width: 768px) {
+    body {
+        background-color: green;
+    }
 
     #list-items {
         height: 310px;
@@ -130,13 +136,19 @@ footer {
 }
 
 @media screen and (max-width: 450px) {
+    body {
+        background-color: yellow;
+    }
 
     #list-items {
-        height: 66vh;
+        height: 62vh;
     }
 }
 
 @media screen and (max-width: 376px) {
+    body {
+        background-color: blue;
+    }
 
     #list-items {
         height: 57vh;
