@@ -1,53 +1,21 @@
-// let tasks = []; //It will store the all the tasks 
-let completedTasks = []; // It will store only the completed tasks
-let incompleteTasks = []; // It will store the tasks which are not completed
-
-// It will fetch the tasks
-async function fetchData() {
-    try {
-        const response = await fetch('tasks.json');
-        const data = await response.json();
-        tasks = data;
-        displayTasks(tasks);
-    }
-    catch (err) {
-        console.log('Err while fetching the tasks : ', err);
+// Initialize localStorage with an empty tasks array if not already set
+function initializeTasks() {
+    if (!localStorage.getItem('tasks')) {
+        localStorage.setItem('tasks', JSON.stringify([]));
     }
 }
 
-// It will display the tasks 
+initializeTasks();
+
+// Display all tasks
 function displayTasks() {
     const taskList = document.querySelector('#list-items');
     taskList.innerHTML = '';
     let count = 1;
-    for (let id in localStorage) {
-        if (localStorage.hasOwnProperty(id)) {
-            let task = JSON.parse(localStorage.getItem(id));
-            const status = (task.completed) ? 'checked' : '';
-            const statusLine = (status) ? 'item-checked' : '';
-            const listElement = `
-            <li class="${statusLine}">
-                <span id="id" style="display:none">${task.id}</span>
-                <span class="task-description" title="Task Description">${count++}. ${task.description}</span>
-                <div class="actions">
-                    <input type="checkbox" class="check-item" ${status} title="Complete Task">
-                    <button class="delete-btn">Delete <i class="fa-solid fa-trash" title="Delete Task"></i></button>
-                </div>
-             </li>`;
-
-            taskList.insertAdjacentHTML('beforeend', listElement);
-        }
-    }
-}
-
-//It will dipslay the completed or incompleted tasks 
-function displayCompleteIncompleteTasks(list) {
-    const taskList = document.querySelector('#list-items');
-    taskList.innerHTML = '';
-    let count = 1;
-    list.forEach((task) => {
-        const status = (task.completed) ? 'checked' : '';
-        const statusLine = (status) ? 'item-checked' : '';
+    const tasks = JSON.parse(localStorage.getItem('tasks'));
+    tasks.forEach(task => {
+        const status = task.completed ? 'checked' : '';
+        const statusLine = status ? 'item-checked' : '';
         const listElement = `
             <li class="${statusLine}">
                 <span id="id" style="display:none">${task.id}</span>
@@ -56,93 +24,85 @@ function displayCompleteIncompleteTasks(list) {
                     <input type="checkbox" class="check-item" ${status} title="Complete Task">
                     <button class="delete-btn">Delete <i class="fa-solid fa-trash" title="Delete Task"></i></button>
                 </div>
-             </li>`;
-
+            </li>`;
         taskList.insertAdjacentHTML('beforeend', listElement);
     });
 }
 
+// Generate a new unique ID for a task
 function generatedId() {
     let newId = 0;
-    if (localStorage.length != 0) {
-        Object.keys(localStorage).forEach((key) => {
-            const item = JSON.parse(localStorage.getItem(key));
-            if (item && item.id) {
-                newId = Math.max(newId, item.id);
-            }
-        })
-    }
+    const tasks = JSON.parse(localStorage.getItem('tasks'));
+    tasks.forEach(task => {
+        newId = Math.max(newId, task.id);
+    });
     return ++newId;
 }
 
-// It will hepls to add the new task
+// Add a new task to localStorage and display tasks
 function addTask(description) {
     const date = new Date();
     if (description !== '') {
+        const tasks = JSON.parse(localStorage.getItem('tasks'));
         const newTask = {
             "id": generatedId(),
             "description": description,
             "completed": false,
             "priority": "Medium",
             "dueDate": date.toLocaleDateString(),
-        }
-        localStorage.setItem(newTask.id, JSON.stringify(newTask));
+        };
+        tasks.push(newTask);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        displayTasks();
     }
-    displayTasks(localStorage);
 }
 
-// It will delete the item from the main tasks with using id
+// Delete a task from localStorage and update the display
 function deleteTask(id) {
-    localStorage.removeItem(id);
-    displayTasks(localStorage);
+    let tasks = JSON.parse(localStorage.getItem('tasks'));
+    tasks = tasks.filter(task => task.id !== id);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    displayTasks();
 }
 
-// It will update the status of the task from the tasks using
+// Update the status of a task and refresh the display
 function updateStatus(status, id) {
-    const task = JSON.parse(localStorage.getItem(id));
-    task.completed = status;
-    localStorage.setItem(task.id, JSON.stringify(task));
-    displayTasks(localStorage);
-}
-
-//get items 
-function getItems(status) {
-    let result = [];
-    for (let id in localStorage) {
-        if (localStorage.hasOwnProperty(id)) {
-            const task = JSON.parse(localStorage.getItem(id));
-            if (task.completed == status) {
-                result.push(task);
-            }
+    let tasks = JSON.parse(localStorage.getItem('tasks'));
+    tasks = tasks.map(task => {
+        if (task.id === id) {
+            task.completed = status;
         }
-    }
-    return result;
+        return task;
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    displayTasks();
 }
 
-// Delete Button
+// Get tasks based on their completion status
+function getItems(status) {
+    const tasks = JSON.parse(localStorage.getItem('tasks'));
+    return tasks.filter(task => task.completed === status);
+}
+
+// Event listener for delete button
 document.querySelector('#list-items').addEventListener('click', function (e) {
     if (e.target && e.target.classList.contains('delete-btn')) {
-        const taskItem = e.target.closest('li'); // Get the parent <li> element
+        const taskItem = e.target.closest('li');
         const id = taskItem.querySelector('#id').textContent;
-        console.log(id);
         deleteTask(id);
-        taskItem.remove();
     }
 });
 
-// Check item or change the status of the item button 
+// Event listener for checkbox change
 document.querySelector('#list-items').addEventListener('change', function (e) {
     if (e.target && e.target.classList.contains('check-item')) {
         const taskLi = e.target.parentElement.parentElement;  // li
         const id = taskLi.querySelector('#id').textContent;
-        const taskDescription = taskLi.querySelector('.task-description');
-        taskDescription.classList.toggle('item-checked');
         updateStatus(e.target.checked, id);
-        // displayTasks(tasks);
     }
-})
+});
 
-// Add a new task button 
+// Event listener for add task button
 document.querySelector('#add-task-btn').addEventListener('click', function (e) {
     e.preventDefault();
     const inputElement = document.querySelector('#task-title');
@@ -150,25 +110,43 @@ document.querySelector('#add-task-btn').addEventListener('click', function (e) {
     inputElement.value = '';
 });
 
-//Completed button display all the completed tasks 
-document.querySelector('#completed-btn').addEventListener('click', function (e) {
-    const status = true;
-    completedTasks = getItems(status);
+// Display completed tasks
+document.querySelector('#completed-btn').addEventListener('click', function () {
+    const completedTasks = getItems(true);
     displayCompleteIncompleteTasks(completedTasks);
 });
 
-//Incomplete button display all the incomplete tasks
-document.querySelector('#incomplete-btn').addEventListener('click', function (e) {
-    const status = false;
-    incompleteTasks = getItems(status);
+// Display incomplete tasks
+document.querySelector('#incomplete-btn').addEventListener('click', function () {
+    const incompleteTasks = getItems(false);
     displayCompleteIncompleteTasks(incompleteTasks);
 });
 
-//It will display all the tasks 
-document.querySelector('#all-tasks').addEventListener('click', function (e) {
-    displayTasks(localStorage);
+// Display all tasks
+document.querySelector('#all-tasks').addEventListener('click', function () {
+    displayTasks();
 });
 
-//Initially fetch the data
-// fetchData();
-displayTasks(localStorage);
+// Display tasks based on their completion status
+function displayCompleteIncompleteTasks(list) {
+    const taskList = document.querySelector('#list-items');
+    taskList.innerHTML = '';
+    let count = 1;
+    list.forEach(task => {
+        const status = task.completed ? 'checked' : '';
+        const statusLine = status ? 'item-checked' : '';
+        const listElement = `
+            <li class="${statusLine}">
+                <span id="id" style="display:none">${task.id}</span>
+                <span class="task-description" title="Task Description">${count++}. ${task.description}</span>
+                <div class="actions">
+                    <input type="checkbox" class="check-item" ${status} title="Complete Task">
+                    <button class="delete-btn">Delete <i class="fa-solid fa-trash" title="Delete Task"></i></button>
+                </div>
+            </li>`;
+        taskList.insertAdjacentHTML('beforeend', listElement);
+    });
+}
+
+// Initially display all tasks
+displayTasks();
