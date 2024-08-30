@@ -17,7 +17,7 @@ function displayTasks() {
         const status = task.completed ? 'checked' : '';
         const statusLine = status ? 'item-checked' : '';
         const listElement = `
-            <li class="${statusLine}">
+            <li class="${statusLine}" data-id="${task.id}">
                 <span id="id" style="display:none">${task.id}</span>
                 <span class="task-description" title="Task Description">${count++}. ${task.description}</span>
                 <div class="actions">
@@ -84,21 +84,20 @@ function getItems(status) {
     return tasks.filter(task => task.completed === status);
 }
 
-// Event listener for delete button
+// Event listener for delete and checkbox change actions
 document.querySelector('#list-items').addEventListener('click', function (e) {
     if (e.target && e.target.classList.contains('delete-btn')) {
         const taskItem = e.target.closest('li');
-        const id = taskItem.querySelector('#id').textContent;
-        deleteTask(id);
+        const id = taskItem.getAttribute('data-id');
+        deleteTask(Number(id));
     }
 });
 
-// Event listener for checkbox change
 document.querySelector('#list-items').addEventListener('change', function (e) {
     if (e.target && e.target.classList.contains('check-item')) {
-        const taskLi = e.target.parentElement.parentElement;  // li
-        const id = taskLi.querySelector('#id').textContent;
-        updateStatus(e.target.checked, id);
+        const taskItem = e.target.closest('li');
+        const id = taskItem.getAttribute('data-id');
+        updateStatus(e.target.checked, Number(id));
     }
 });
 
@@ -136,7 +135,7 @@ function displayCompleteIncompleteTasks(list) {
         const status = task.completed ? 'checked' : '';
         const statusLine = status ? 'item-checked' : '';
         const listElement = `
-            <li class="${statusLine}">
+            <li class="${statusLine}" data-id="${task.id}">
                 <span id="id" style="display:none">${task.id}</span>
                 <span class="task-description" title="Task Description">${count++}. ${task.description}</span>
                 <div class="actions">
